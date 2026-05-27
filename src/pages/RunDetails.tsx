@@ -1,53 +1,114 @@
 import { motion } from "framer-motion";
 
+import { useEffect, useState } from "react";
+
+import { useParams } from "react-router-dom";
+
+import api from "../services/api";
+
 export default function RunDetails() {
 
-  const logs = `
-npm ERR! missing dependency
-Process completed with exit code 1
-Module not found
-`;
+  const { id } = useParams();
 
-  const errors = [
-    "npm ERR! missing dependency",
-    "Process completed with exit code 1",
-  ];
+  const [run, setRun] = useState<any>(null);
 
-  const aiSuggestion = `
-The workflow failed because required dependencies are missing.
+  const [loading, setLoading] = useState(true);
 
-Fix:
-1. Run npm install
-2. Verify package.json
-3. Re-run workflow
-`;
+  useEffect(() => {
+
+    const fetchRun = async () => {
+
+      try {
+
+        const res = await api.get(`/runs/${id}`);
+
+        setRun(res.data);
+
+      } catch (err) {
+
+        console.log(err);
+
+      } finally {
+
+        setLoading(false);
+
+      }
+
+    };
+
+    fetchRun();
+
+  }, [id]);
+
+  if (loading) {
+
+    return (
+
+      <div className="min-h-screen flex items-center justify-center text-3xl font-bold">
+
+        Loading...
+
+      </div>
+
+    );
+
+  }
+
+  if (!run) {
+
+    return (
+
+      <div className="min-h-screen flex items-center justify-center text-3xl font-bold">
+
+        Run not found
+
+      </div>
+
+    );
+
+  }
 
   return (
+
     <div className="min-h-screen bg-[#FDF7F2] p-6">
 
-      {/* Header */}
+      {/* HEADER */}
       <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
 
         <div>
+
           <h1 className="text-4xl font-bold">
             Workflow Run Details
           </h1>
 
           <p className="text-gray-500 mt-2">
-            Run ID: 24519457361
+            Run ID: {run.runId}
           </p>
+
+          <p className="text-gray-500 mt-1">
+            Repository: {run.repo}
+          </p>
+
         </div>
 
-        <div className="px-5 py-2 rounded-full bg-red-400 text-white font-medium w-fit">
-          failure
+        <div
+          className={`px-5 py-2 rounded-full text-white font-medium w-fit ${
+            run.status === "failure"
+              ? "bg-red-400"
+              : "bg-green-400"
+          }`}
+        >
+
+          {run.status}
+
         </div>
 
       </div>
 
-      {/* Main Grid */}
+      {/* MAIN GRID */}
       <div className="grid lg:grid-cols-3 gap-6 mt-10">
 
-        {/* Logs */}
+        {/* LOGS */}
         <motion.div
           initial={{ opacity: 0, y: 40 }}
           animate={{ opacity: 1, y: 0 }}
@@ -59,15 +120,17 @@ Fix:
           </h2>
 
           <pre className="text-green-400 font-mono text-sm overflow-x-auto whitespace-pre-wrap">
-            {logs}
+
+            {run.logs}
+
           </pre>
 
         </motion.div>
 
-        {/* Right Side */}
+        {/* RIGHT SIDE */}
         <div className="space-y-6">
 
-          {/* Errors */}
+          {/* ERRORS */}
           <motion.div
             initial={{ opacity: 0, x: 40 }}
             animate={{ opacity: 1, x: 0 }}
@@ -80,20 +143,24 @@ Fix:
 
             <div className="space-y-4">
 
-              {errors.map((err, idx) => (
+              {run.errors?.map((err: string, idx: number) => (
+
                 <div
                   key={idx}
                   className="p-4 rounded-2xl bg-red-100 text-red-600 font-medium"
                 >
+
                   {err}
+
                 </div>
+
               ))}
 
             </div>
 
           </motion.div>
 
-          {/* AI Suggestions */}
+          {/* AI SECTION */}
           <motion.div
             initial={{ opacity: 0, x: 40 }}
             animate={{ opacity: 1, x: 0 }}
@@ -106,7 +173,9 @@ Fix:
             </h2>
 
             <p className="text-gray-700 leading-relaxed whitespace-pre-line">
-              {aiSuggestion}
+
+              {run.aiResponse}
+
             </p>
 
           </motion.div>
@@ -116,5 +185,7 @@ Fix:
       </div>
 
     </div>
+
   );
+
 }

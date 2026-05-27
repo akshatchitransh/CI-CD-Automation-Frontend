@@ -1,10 +1,40 @@
+import { useEffect, useState } from "react";
+
 import Sidebar from "../components/dashboard/Sidebar";
 import Topbar from "../components/dashboard/Topbar";
 import StatCard from "../components/dashboard/StatCard";
 import RunCard from "../components/dashboard/RunCard";
 
+import api from "../services/api";
+
 export default function Dashboard() {
+
+  const [runs, setRuns] = useState<any[]>([]);
+
+  useEffect(() => {
+
+    const fetchRuns = async () => {
+
+      try {
+
+        const res = await api.get("/runs");
+
+        setRuns(res.data);
+
+      } catch (err) {
+
+        console.log(err);
+
+      }
+
+    };
+
+    fetchRuns();
+
+  }, []);
+
   return (
+
     <div className="min-h-screen bg-[#FDF7F2] flex">
 
       <Sidebar />
@@ -15,27 +45,31 @@ export default function Dashboard() {
 
         <main className="p-6">
 
-          {/* Stats */}
+          {/* STATS */}
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
 
             <StatCard
               title="Total Runs"
-              value="128"
+              value={String(runs.length)}
             />
 
             <StatCard
               title="Failures"
-              value="23"
+              value={String(
+                runs.filter(
+                  (run) => run.status === "failure"
+                ).length
+              )}
             />
 
             <StatCard
               title="AI Analyses"
-              value="97"
+              value={String(runs.length)}
             />
 
           </div>
 
-          {/* Recent Runs */}
+          {/* RECENT RUNS */}
           <div className="mt-10">
 
             <h2 className="text-3xl font-bold mb-6">
@@ -44,17 +78,16 @@ export default function Dashboard() {
 
             <div className="space-y-6">
 
-              <RunCard
-                runId="24519457361"
-                status="failure"
-                repo="CICD-AUTOMATION"
-              />
+              {runs.map((run: any) => (
 
-              <RunCard
-                runId="24519457362"
-                status="success"
-                repo="AI-DEBUGGER"
-              />
+                <RunCard
+                  key={run.runId}
+                  runId={run.runId}
+                  status={run.status}
+                  repo={run.repo}
+                />
+
+              ))}
 
             </div>
 
@@ -65,5 +98,7 @@ export default function Dashboard() {
       </div>
 
     </div>
+
   );
+
 }
