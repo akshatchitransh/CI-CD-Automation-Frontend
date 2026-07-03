@@ -4,8 +4,7 @@ import {
   Wrench,
   Sparkles,
   Copy,
-  TerminalSquare,
-  Gauge,
+  
 } from "lucide-react";
 
 type Props = {

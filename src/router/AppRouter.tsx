@@ -3,7 +3,7 @@ import { Navigate } from "react-router-dom";
 import Insights from "../pages/Insights";
 import WorkflowRuns from "../pages/WorkflowRuns";
 
-import LandingPage from "../pages/LandingPage";
+
 import Dashboard from "../pages/Dashboard";
 import RunDetails from "../pages/RunDetails";
 import Home from "../pages/Home";
