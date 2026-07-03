@@ -1,191 +1,212 @@
 import { motion } from "framer-motion";
-
 import { useEffect, useState } from "react";
-
-import { useParams } from "react-router-dom";
-
 import api from "../services/api";
+import ActionPanel from "../components/details/ActionPanel";
+import Timeline from "../components/details/Timeline";
+import {
+  ArrowLeft,
+  BrainCircuit,
+  FolderGit2,
+  GitBranch,
+  ShieldAlert,
+} from "lucide-react";
+import { Link, useParams } from "react-router-dom";
+
+import Terminal from "../components/details/Terminal";
+import AIInsight from "../components/details/AIInsight";
 
 export default function RunDetails() {
-
   const { id } = useParams();
 
   const [run, setRun] = useState<any>(null);
-
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-
     const fetchRun = async () => {
-
       try {
-
         const res = await api.get(`/runs/${id}`);
-
         setRun(res.data);
-
       } catch (err) {
-
         console.log(err);
-
       } finally {
-
         setLoading(false);
-
       }
-
     };
 
     fetchRun();
-
   }, [id]);
 
   if (loading) {
-
     return (
-
-      <div className="min-h-screen flex items-center justify-center text-3xl font-bold">
-
+      <div className="min-h-screen flex items-center justify-center text-2xl font-semibold">
         Loading...
-
       </div>
-
     );
-
   }
 
   if (!run) {
-
     return (
-
-      <div className="min-h-screen flex items-center justify-center text-3xl font-bold">
-
-        Run not found
-
+      <div className="min-h-screen flex items-center justify-center text-2xl font-semibold">
+        Run Not Found
       </div>
-
     );
-
   }
 
   return (
+    <div className="min-h-screen bg-[#FDF7F2]">
 
-    <div className="min-h-screen bg-[#FDF7F2] p-6">
+      <div className="max-w-7xl mx-auto px-6 py-10">
 
-      {/* HEADER */}
-      <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+        <Link
+          to="/dashboard"
+          className="inline-flex items-center gap-2 text-[#F28C7A] hover:gap-3 transition-all font-medium"
+        >
+          <ArrowLeft size={18} />
+          Back to Dashboard
+        </Link>
 
-        <div>
-
-          <h1 className="text-4xl font-bold">
-            Workflow Run Details
+        <motion.div
+          initial={{ opacity: 0, y: 25 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="mt-8"
+        >
+          <h1 className="text-5xl font-black text-gray-800">
+            Workflow Run
           </h1>
 
-          <p className="text-gray-500 mt-2">
-            Run ID: {run.runId}
+          <p className="mt-3 text-gray-500 text-lg">
+            Run ID : {run.runId}
           </p>
-
-          <p className="text-gray-500 mt-1">
-            Repository: {run.repo}
-          </p>
-
-        </div>
-
-        <div
-          className={`px-5 py-2 rounded-full text-white font-medium w-fit ${
-            run.status === "failure"
-              ? "bg-red-400"
-              : "bg-green-400"
-          }`}
-        >
-
-          {run.status}
-
-        </div>
-
-      </div>
-
-      {/* MAIN GRID */}
-      <div className="grid lg:grid-cols-3 gap-6 mt-10">
-
-        {/* LOGS */}
-        <motion.div
-          initial={{ opacity: 0, y: 40 }}
-          animate={{ opacity: 1, y: 0 }}
-          className="lg:col-span-2 rounded-3xl bg-[#1E1E1E] p-6 shadow-2xl overflow-hidden"
-        >
-
-          <h2 className="text-2xl font-bold text-white mb-6">
-            Logs
-          </h2>
-
-          <pre className="text-green-400 font-mono text-sm overflow-x-auto whitespace-pre-wrap">
-
-            {run.logs}
-
-          </pre>
-
         </motion.div>
 
-        {/* RIGHT SIDE */}
-        <div className="space-y-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-6 mt-10">
 
-          {/* ERRORS */}
-          <motion.div
-            initial={{ opacity: 0, x: 40 }}
-            animate={{ opacity: 1, x: 0 }}
-            className="rounded-3xl bg-white/60 backdrop-blur-xl border border-white/30 shadow-xl p-6"
-          >
+          <SummaryCard
+            icon={<FolderGit2 size={24} />}
+            title="Repository"
+            value={run.repo}
+          />
 
-            <h2 className="text-2xl font-bold mb-6">
-              Errors
-            </h2>
+          <SummaryCard
+            icon={<ShieldAlert size={24} />}
+            title="Status"
+            value={run.status}
+            danger={run.status === "failure"}
+          />
 
-            <div className="space-y-4">
+          <SummaryCard
+            icon={<GitBranch size={24} />}
+            title="Branch"
+            value="main"
+          />
 
-              {run.errors?.map((err: string, idx: number) => (
+          <SummaryCard
+            icon={<BrainCircuit size={24} />}
+            title="AI"
+            value="Gemini"
+          />
 
-                <div
-                  key={idx}
-                  className="p-4 rounded-2xl bg-red-100 text-red-600 font-medium"
-                >
+        </div>
 
-                  {err}
+        <div className="grid grid-cols-1 xl:grid-cols-2 gap-8 mt-12">
 
-                </div>
+          <Terminal logs={run.logs} />
 
-              ))}
+          <AIInsight analysis={run.aiResponse} />
 
-            </div>
+        </div>
 
-          </motion.div>
+        <div className="mt-12 rounded-3xl bg-white border border-white/50 shadow-lg p-8">
 
-          {/* AI SECTION */}
-          <motion.div
-            initial={{ opacity: 0, x: 40 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ delay: 0.1 }}
-            className="rounded-3xl bg-gradient-to-r from-[#F28C7A]/20 to-[#E8B68A]/20 border border-white/30 shadow-xl p-6"
-          >
+          <h2 className="text-2xl font-bold mb-6">
+            Extracted Errors
+          </h2>
 
-            <h2 className="text-2xl font-bold mb-6">
-              AI Suggestions
-            </h2>
+          <div className="space-y-4">
 
-            <p className="text-gray-700 leading-relaxed whitespace-pre-line">
+            {run.errors?.map((error: string, index: number) => (
+              <ErrorBadge
+                key={index}
+                text={error}
+              />
+            ))}
 
-              {run.aiResponse}
+          </div>
 
-            </p>
+        </div>
 
-          </motion.div>
+        <div className="mt-12">
+          <Timeline />
+        </div>
+
+        <div className="mt-12">
+
+          <ActionPanel
+            logs={run.logs}
+            ai={JSON.stringify(run.aiResponse, null, 2)}
+          />
 
         </div>
 
       </div>
 
     </div>
-
   );
+}
 
+type CardProps = {
+  icon: React.ReactNode;
+  title: string;
+  value: string;
+  danger?: boolean;
+};
+
+function SummaryCard({
+  icon,
+  title,
+  value,
+  danger,
+}: CardProps) {
+  return (
+    <motion.div
+      whileHover={{ y: -5 }}
+      className="rounded-3xl bg-white shadow-lg border border-white/50 p-6"
+    >
+      <div
+        className={`w-12 h-12 rounded-2xl flex items-center justify-center text-white ${
+          danger
+            ? "bg-red-500"
+            : "bg-gradient-to-r from-[#F28C7A] to-[#E8B68A]"
+        }`}
+      >
+        {icon}
+      </div>
+
+      <p className="mt-6 text-sm text-gray-500">
+        {title}
+      </p>
+
+      <h2
+        className={`mt-2 text-2xl font-bold ${
+          danger
+            ? "text-red-500"
+            : "text-gray-800"
+        }`}
+      >
+        {value}
+      </h2>
+    </motion.div>
+  );
+}
+
+function ErrorBadge({
+  text,
+}: {
+  text: string;
+}) {
+  return (
+    <div className="rounded-2xl border border-red-200 bg-red-50 px-5 py-4 text-red-600 font-medium">
+      ❌ {text}
+    </div>
+  );
 }

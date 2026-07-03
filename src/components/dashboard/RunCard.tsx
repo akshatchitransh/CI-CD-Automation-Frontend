@@ -1,4 +1,11 @@
 import { Link } from "react-router-dom";
+import { motion } from "framer-motion";
+import {
+  ArrowRight,
+  BrainCircuit,
+  GitBranch,
+  Package,
+} from "lucide-react";
 
 type Props = {
   runId: string;
@@ -18,39 +25,128 @@ export default function RunCard({
 
     <Link to={`/runs/${runId}`}>
 
-      <div className="p-6 rounded-3xl bg-white/60 backdrop-blur-xl shadow-xl border border-white/30 hover:scale-[1.02] hover:shadow-2xl transition duration-300 cursor-pointer">
+      <motion.div
+        whileHover={{
+          y: -5,
+          scale: 1.015,
+        }}
+        transition={{
+          duration: 0.25,
+        }}
+        className="group rounded-3xl border border-white/40 bg-white/70 backdrop-blur-xl shadow-lg hover:shadow-2xl overflow-hidden"
+      >
 
-        <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+        {/* Top Accent */}
+        <div
+          className={`h-1 ${
+            isFailure
+              ? "bg-gradient-to-r from-red-400 to-red-500"
+              : "bg-gradient-to-r from-emerald-400 to-green-500"
+          }`}
+        />
 
-          <div>
+        <div className="p-6">
 
-            <h3 className="text-2xl font-semibold">
-              {repo}
-            </h3>
+          {/* Header */}
 
-            <p className="text-gray-500 mt-1">
-              Run ID: {runId}
+          <div className="flex items-center justify-between">
+
+            <div
+              className={`px-4 py-1 rounded-full text-sm font-semibold ${
+                isFailure
+                  ? "bg-red-100 text-red-600"
+                  : "bg-green-100 text-green-700"
+              }`}
+            >
+              {isFailure ? "Failed" : "Success"}
+            </div>
+
+            <span className="text-sm text-gray-500">
+              Just now
+            </span>
+
+          </div>
+
+          {/* Repository */}
+
+          <div className="mt-6">
+
+            <div className="flex items-center gap-3">
+
+              <div className="w-11 h-11 rounded-xl bg-gradient-to-r from-[#F28C7A] to-[#E8B68A] flex items-center justify-center text-white">
+
+                <Package size={20} />
+
+              </div>
+
+              <div>
+
+                <h3 className="text-xl font-bold text-gray-800">
+
+                  {repo}
+
+                </h3>
+
+                <div className="flex items-center gap-2 text-sm text-gray-500 mt-1">
+
+                  <GitBranch size={14} />
+
+                  <span>main</span>
+
+                </div>
+
+              </div>
+
+            </div>
+
+          </div>
+
+          {/* Run Info */}
+
+          <div className="mt-6">
+
+            <p className="text-sm text-gray-500">
+              Workflow Run
+            </p>
+
+            <p className="font-semibold text-gray-800 break-all">
+              #{runId}
             </p>
 
           </div>
 
-          <div
-            className={`px-5 py-2 rounded-full text-white font-medium w-fit ${
-              isFailure
-                ? "bg-red-400"
-                : "bg-green-400"
-            }`}
-          >
+          {/* Footer */}
 
-            {status}
+          <div className="mt-8 flex items-center justify-between">
+
+            <div className="flex items-center gap-2 bg-orange-50 text-orange-600 px-3 py-2 rounded-xl">
+
+              <BrainCircuit size={18} />
+
+              <span className="text-sm font-medium">
+                AI Analysed
+              </span>
+
+            </div>
+
+            <div className="flex items-center gap-2 font-medium text-[#F28C7A] group-hover:translate-x-1 transition">
+
+              <span>
+                View Details
+              </span>
+
+              <ArrowRight size={18} />
+
+            </div>
 
           </div>
 
         </div>
 
-      </div>
+      </motion.div>
 
     </Link>
 
   );
+
 }
