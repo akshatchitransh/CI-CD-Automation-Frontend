@@ -1,4 +1,9 @@
-import { LayoutDashboard, GitBranch, BrainCircuit } from "lucide-react";
+import {
+  LayoutDashboard,
+  GitBranch,
+  BrainCircuit,
+} from "lucide-react";
+import { NavLink } from "react-router-dom";
 
 export default function Sidebar() {
   return (
@@ -10,20 +15,41 @@ export default function Sidebar() {
 
       <nav className="mt-12 flex flex-col gap-4">
 
-        <button className="flex items-center gap-3 px-4 py-3 rounded-2xl bg-gradient-to-r from-[#F28C7A] to-[#E8B68A] text-white shadow-lg">
+        <NavLink
+          to="/dashboard"
+          className={({ isActive }) =>
+            `flex items-center gap-3 px-4 py-3 rounded-2xl transition ${
+              isActive
+                ? "bg-gradient-to-r from-[#F28C7A] to-[#E8B68A] text-white shadow-lg"
+                : "hover:bg-white text-gray-700"
+            }`
+          }
+        >
           <LayoutDashboard size={20} />
           Dashboard
-        </button>
+        </NavLink>
 
-        <button className="flex items-center gap-3 px-4 py-3 rounded-2xl hover:bg-white transition">
+        <NavLink
+          to="/runs"
+          className="flex items-center gap-3 px-4 py-3 rounded-2xl hover:bg-white transition text-gray-700"
+        >
           <GitBranch size={20} />
           Workflow Runs
-        </button>
+        </NavLink>
 
-        <button className="flex items-center gap-3 px-4 py-3 rounded-2xl hover:bg-white transition">
+        <NavLink
+          to="/insights"
+          className={({ isActive }) =>
+            `flex items-center gap-3 px-4 py-3 rounded-2xl transition ${
+              isActive
+                ? "bg-gradient-to-r from-[#F28C7A] to-[#E8B68A] text-white shadow-lg"
+                : "hover:bg-white text-gray-700"
+            }`
+          }
+        >
           <BrainCircuit size={20} />
           AI Insights
-        </button>
+        </NavLink>
 
       </nav>
 

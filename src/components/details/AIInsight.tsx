@@ -9,22 +9,17 @@ import {
 } from "lucide-react";
 
 type Props = {
-  analysis: {
-    rootCause: string;
-    explanation: string;
-    fix: string;
-    commands: string[];
-    confidence: number;
-  };
+  analysis: any;
 };
 
 export default function AIInsight({ analysis }: Props) {
-  const copy = async () => {
-    await navigator.clipboard.writeText(
-      JSON.stringify(analysis, null, 2)
-    );
-  };
-
+const copy = async () => {
+  await navigator.clipboard.writeText(
+    typeof analysis === "string"
+      ? analysis
+      : JSON.stringify(analysis, null, 2)
+  );
+};
   return (
     <div className="rounded-3xl bg-white/80 backdrop-blur-xl shadow-xl border border-white/40 p-8">
 
@@ -64,41 +59,85 @@ export default function AIInsight({ analysis }: Props) {
 
       <div className="mt-8 space-y-6">
 
-        <Section
-          icon={<Lightbulb size={20} />}
-          title="Root Cause"
-          content={analysis.rootCause}
-        />
+  {typeof analysis === "string" ? (
 
-        <Section
-          icon={<Sparkles size={20} />}
-          title="Explanation"
-          content={analysis.explanation}
-        />
+    <Section
+      icon={<BrainCircuit size={20} />}
+      title="AI Analysis"
+      content={analysis}
+    />
 
-        <Section
-          icon={<Wrench size={20} />}
-          title="Suggested Fix"
-          content={analysis.fix}
-        />
+  ) : (
 
-        <Section
-          icon={<TerminalSquare size={20} />}
+    <>
+
+      <Section
+        icon={<Lightbulb size={20} />}
+        title="Root Cause"
+        content={analysis.rootCause}
+      />
+
+      <Section
+        icon={<Sparkles size={20} />}
+        title="Explanation"
+        content={analysis.explanation}
+      />
+
+      <Section
+        icon={<Wrench size={20} />}
+        title="Fix"
+        content={analysis.fix}
+      />
+
+      {analysis.commands && (
+
+        <CodeBlock
           title="Commands"
-          content={
-            analysis.commands?.length
-              ? analysis.commands.join("\n")
-              : "No commands suggested."
-          }
+          commands={analysis.commands}
         />
 
-        <Section
-          icon={<Gauge size={20} />}
-          title="Confidence"
-          content={`${analysis.confidence}%`}
-        />
+      )}
 
-      </div>
+      {analysis.confidence && (
+
+        <div>
+
+          <div className="flex justify-between mb-2">
+
+            <span className="font-semibold">
+
+              Confidence
+
+            </span>
+
+            <span>
+
+              {analysis.confidence}%
+
+            </span>
+
+          </div>
+
+          <div className="h-3 rounded-full bg-gray-200 overflow-hidden">
+
+            <div
+              className="h-full rounded-full bg-green-500"
+              style={{
+                width: `${analysis.confidence}%`,
+              }}
+            />
+
+          </div>
+
+        </div>
+
+      )}
+
+    </>
+
+  )}
+
+</div>
 
     </div>
   );
@@ -134,4 +173,47 @@ function Section({
 
     </div>
   );
+}
+
+function CodeBlock({
+  title,
+  commands,
+}: {
+  title: string;
+  commands: string[];
+}) {
+
+  return (
+
+    <div>
+
+      <h3 className="font-semibold mb-3">
+
+        {title}
+
+      </h3>
+
+      <div className="rounded-2xl bg-[#151515] text-green-400 p-5 font-mono space-y-2">
+
+        {commands.map(
+          (
+            command,
+            index
+          ) => (
+
+            <div key={index}>
+
+              $ {command}
+
+            </div>
+
+          )
+        )}
+
+      </div>
+
+    </div>
+
+  );
+
 }

@@ -1,6 +1,8 @@
 import { motion } from "framer-motion";
+import { ExternalLink } from "lucide-react";
 import { useEffect, useState } from "react";
 import api from "../services/api";
+import downloadReport from "../utils/downloadReport";
 import ActionPanel from "../components/details/ActionPanel";
 import Timeline from "../components/details/Timeline";
 import {
@@ -115,6 +117,26 @@ export default function RunDetails() {
           <AIInsight analysis={run.aiResponse} />
 
         </div>
+        <div className="mt-6">
+
+  {run.workflowUrl && (
+
+    <a
+      href={run.workflowUrl}
+      target="_blank"
+      rel="noreferrer"
+      className="inline-flex items-center gap-3 rounded-2xl border border-[#F28C7A] px-6 py-4 text-[#F28C7A] font-semibold hover:bg-[#F28C7A] hover:text-white transition"
+    >
+
+      <ExternalLink size={20} />
+
+      Open GitHub Workflow
+
+    </a>
+
+  )}
+
+</div>
 
         <div className="mt-12 rounded-3xl bg-white border border-white/50 shadow-lg p-8">
 
@@ -140,6 +162,14 @@ export default function RunDetails() {
         </div>
 
         <div className="mt-12">
+          <button
+  onClick={() => downloadReport(run)}
+  className="mt-6 rounded-2xl bg-[#F28C7A] px-6 py-4 text-white font-semibold hover:opacity-90"
+>
+
+  Download AI Report (PDF)
+
+</button>
 
           <ActionPanel
             logs={run.logs}
