@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
+import FailureChart from "../components/dashboard/FailureChart";
 import {
   Activity,
   Bot,
@@ -15,6 +16,7 @@ import api from "../services/api";
 
 export default function Dashboard() {
   const [runs, setRuns] = useState<any[]>([]);
+  const [trend, setTrend] = useState<any[]>([]);
   const [analytics, setAnalytics] = useState({
   totalRuns: 0,
   failedRuns: 0,
@@ -45,9 +47,25 @@ export default function Dashboard() {
     console.log(err);
   }
 };
+const fetchTrend = async () => {
+
+  try {
+
+    const res = await api.get("/analytics/trend");
+
+    setTrend(res.data);
+
+  } catch (err) {
+
+    console.log(err);
+
+  }
+
+};
 
     fetchRuns();
     fetchAnalytics();
+    fetchTrend();
   }, []);
 
  
@@ -118,6 +136,13 @@ export default function Dashboard() {
     subtitle="Pipeline success percentage"
     icon={Bot}
     color="linear-gradient(135deg,#8b5cf6,#6366f1)"
+  />
+
+</div>
+<div className="mt-10">
+
+  <FailureChart
+    data={trend}
   />
 
 </div>
