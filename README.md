@@ -1,236 +1,344 @@
-# 🚀 FailSense AI — AI Powered CI/CD Failure Analyzer
+# 🚀 FailSense AI — Frontend
 
-> Automatically detects failed GitHub Actions workflows, downloads logs, extracts critical errors, analyzes failures using Gemini AI, and provides actionable fixes through a modern analytics dashboard.
+> **An AI-powered dashboard for analyzing, visualizing, and understanding CI/CD pipeline failures.**  
+> FailSense transforms complex GitHub Actions failures into actionable insights, helping developers identify root causes faster and reduce debugging time.
 
 
+
+<p align="center">
+
+![React](https://img.shields.io/badge/React-19-61DAFB?logo=react&logoColor=white)
+![TypeScript](https://img.shields.io/badge/TypeScript-5-3178C6?logo=typescript&logoColor=white)
+![Vite](https://img.shields.io/badge/Vite-8-646CFF?logo=vite&logoColor=white)
+![Framer Motion](https://img.shields.io/badge/Framer_Motion-Animations-black)
+![Recharts](https://img.shields.io/badge/Recharts-Analytics-orange)
+![License](https://img.shields.io/badge/License-MIT-green)
+
+</p>
 
 ---
 
-# 📌 Problem
+# 📖 Overview
 
-Debugging failed CI/CD pipelines is often slow because developers manually inspect thousands of workflow log lines to identify the root cause.
+Modern CI/CD pipelines generate thousands of log lines whenever a workflow fails. Locating the actual error often requires manually scrolling through logs, identifying stack traces, and correlating failures across multiple jobs.
 
-**FailSense AI automates this entire process.**
+**FailSense AI** provides a modern interface that visualizes workflow executions, displays failure analytics, and presents AI-generated explanations for failed pipeline runs. Instead of reading raw logs, developers receive concise summaries, possible root causes, and recommended fixes.
 
-It detects failed GitHub Actions workflows in real time, extracts only the important error logs, analyzes them using Gemini AI, and presents developer-friendly fixes through an interactive dashboard.
+This repository contains the **React frontend** responsible for rendering dashboards, workflow history, AI insights, analytics, and downloadable reports.
+
+---
+
+# ❓ Problem Statement
+
+CI/CD failures are difficult to debug because:
+
+- Workflow logs are extremely verbose.
+- Root causes are buried beneath thousands of log lines.
+- Developers spend significant time identifying the actual failure.
+- Teams lack centralized visualization of workflow health.
+- Existing GitHub UI focuses on logs rather than insights.
+
+FailSense AI solves these challenges through intelligent visualization and AI-assisted failure analysis.
 
 ---
 
 # ✨ Features
 
-- 🔥 GitHub Webhook Integration
-- 🤖 Gemini AI powered failure analysis
-- 📥 Automatic GitHub Actions log download
-- 🧠 Intelligent error extraction & filtering
-- 📊 Analytics Dashboard
-- 📈 Failure Trend Graphs
-- 🔍 Search & Filter workflow runs
-- 📄 PDF Export of AI Reports
-- 📱 Fully Responsive UI
-- ⚡ Near Real-Time Monitoring
+## 📊 Dashboard
+
+- Workflow health overview
+- Failure statistics
+- Interactive charts
+- Recent failed runs
+- Repository summary
+- Quick navigation
 
 ---
 
-# 🏗 Architecture
+## 🤖 AI Insights
+
+- AI-generated failure explanation
+- Root cause identification
+- Suggested fixes
+- Human-readable summaries
+- Developer-friendly recommendations
+
+---
+
+## 📈 Analytics
+
+- Failure trends
+- Success vs Failure visualization
+- Repository activity
+- Workflow execution history
+- Performance overview
+
+---
+
+## 📄 Report Export
+
+Generate downloadable PDF reports containing:
+
+- Workflow information
+- Failure details
+- AI analysis
+- Suggested resolution
+- Execution timeline
+
+---
+
+## 🎨 Modern UI
+
+- Responsive layout
+- Framer Motion animations
+- Interactive cards
+- Clean developer experience
+- Mobile-friendly interface
+
+---
+
+# 🏗 System Architecture
 
 ```text
-                   GitHub Repository
-                           │
-                           │ Push / Pull Request
-                           ▼
-                 GitHub Actions Workflow
-                           │
-                  Workflow Failed ❌
-                           │
-                           ▼
-                  GitHub Webhook Event
-                           │
-                           ▼
-                Express Backend Server
-                           │
-          ┌────────────────┴───────────────┐
-          │                                │
-          ▼                                ▼
- Download Workflow Logs          Extract Error Logs
-          │                                │
-          └──────────────┬─────────────────┘
-                         ▼
-                 Filter Critical Errors
-                         │
-                         ▼
-                Gemini AI Analysis
-                         │
-                         ▼
-                    MongoDB Storage
-                         │
-                         ▼
-                React Dashboard UI
-                         │
-     ┌──────────────┬───────────────┐
-     ▼              ▼               ▼
- Workflow Runs   AI Insights   Analytics
+                GitHub Repository
+                        │
+                        ▼
+                 GitHub Actions
+                        │
+                        ▼
+                 Workflow Failure
+                        │
+                        ▼
+                Backend API Server
+                        │
+        AI Analysis + Log Processing
+                        │
+                        ▼
+                REST API Responses
+                        │
+                        ▼
+             React + TypeScript Frontend
+                        │
+        ┌───────────────┼────────────────┐
+        ▼               ▼                ▼
+   Dashboard       Workflow Runs     AI Insights
 ```
 
 ---
 
-# ⚙ Tech Stack
+# 🔄 Application Flow
 
-## Frontend
+```text
+Developer Pushes Code
+          │
+          ▼
+GitHub Actions Executes
+          │
+          ▼
+Workflow Succeeds / Fails
+          │
+          ▼
+Backend Processes Logs
+          │
+          ▼
+AI Generates Failure Analysis
+          │
+          ▼
+Frontend Displays
 
-- React 19
-- TypeScript
-- Tailwind CSS
-- React Router
-- Recharts
-- jsPDF
-- Lucide Icons
-
----
-
-## Backend
-
-- Node.js
-- Express.js
-- MongoDB
-- Mongoose
-- Gemini API
-- GitHub REST API
-
----
-
-## DevOps
-
-- GitHub Actions
-- GitHub Webhooks
-- Render
-- Vercel
-
----
-
-# 📂 Folder Structure
-
+• Dashboard
+• Charts
+• Failure Timeline
+• AI Suggestions
+• Downloadable Report
 ```
-Frontend
+
+---
+
+# 🛠 Tech Stack
+
+| Layer | Technology |
+|--------|------------|
+| Frontend | React 19 |
+| Language | TypeScript |
+| Build Tool | Vite |
+| Routing | React Router |
+| Styling | CSS |
+| Animation | Framer Motion |
+| Charts | Recharts |
+| HTTP Client | Axios |
+| PDF Export | jsPDF |
+
+---
+
+# 📂 Project Structure
+
+```text
+src
+│
+├── assets
 │
 ├── components
-├── pages
-├── router
-├── services
-└── utils
-
-Backend
+│   ├── dashboard
+│   ├── details
+│   ├── Hero
+│   ├── Navbar
+│   ├── CTA
+│   └── Workflow
 │
-├── models
-├── routes
+├── pages
+│   ├── LandingPage
+│   ├── Dashboard
+│   ├── WorkflowRuns
+│   ├── RunDetails
+│   └── Insights
+│
+├── router
+│
 ├── services
+│   └── api.ts
+│
 ├── utils
-└── index.ts
+│   └── downloadReport.ts
+│
+└── main.tsx
 ```
 
 ---
 
-# ⚡ Workflow
+# 🚀 Getting Started
 
-### 1️⃣ Developer pushes code
+## Prerequisites
 
-↓
-
-### 2️⃣ GitHub Actions executes workflow
-
-↓
-
-### 3️⃣ Workflow fails
-
-↓
-
-### 4️⃣ GitHub sends Webhook
-
-↓
-
-### 5️⃣ Backend downloads workflow logs
-
-↓
-
-### 6️⃣ Important errors extracted
-
-↓
-
-### 7️⃣ Gemini AI generates
-
-- Root Cause
-- Explanation
-- Fix
-- Commands
-- Confidence Score
-
-↓
-
-### 8️⃣ Results stored in MongoDB
-
-↓
-
-### 9️⃣ Dashboard updates
+- Node.js 18+
+- npm
 
 ---
 
-# 📊 Dashboard
+## Installation
 
-- Total Runs
-- Failed Runs
-- Success Runs
-- Success Rate
-- Failure Trends
-- Search Workflows
-- AI Reports
-- PDF Export
+```bash
+git clone https://github.com/akshatchitransh/CI-CD-Automation-Frontend.git
 
----
+cd CI-CD-Automation-Frontend
 
-# 🚀 Optimisations
-
-- Reduced API latency by **98.3% (349ms → 6ms)** using Redis caching.
-- Reduced LLM token usage by **95%+** using intelligent CI/CD log filtering.
-- Limited AI context to the **Top 5** critical errors for faster inference.
-- Added MongoDB indexing for efficient workflow retrieval.
-- Eliminated unnecessary GitHub polling using Webhooks.
-
----
-
-# 📈 Future Improvements
-
-- BullMQ Background Jobs
-- Real-time Dashboard (WebSockets)
-- Multi Repository Support
-- Slack & Discord Notifications
-- Docker Deployment
-- Kubernetes Support
-- Prometheus & Grafana Monitoring
-
----
-
----
-
-# 🧠 AI Output
-
-The AI generates
-
-- Root Cause
-- Detailed Explanation
-- Fix
-- Shell Commands
-- Confidence Score
-
-Example
-
-```json
-{
-  "rootCause": "...",
-  "explanation": "...",
-  "fix": "...",
-  "commands": [],
-  "confidence": 95
-}
+npm install
 ```
+
+---
+
+## Environment Variables
+
+Create a `.env` file.
+
+```env
+VITE_API_BASE_URL=cicd-automation-back.onrender.com
+```
+
+Update the backend URL according to your deployment.
+
+---
+
+## Run Development Server
+
+```bash
+npm run dev
+```
+
+---
+
+## Production Build
+
+```bash
+npm run build
+```
+
+Preview production build
+
+```bash
+npm run preview
+```
+
+---
+
+# 📱 Pages
+
+### Landing Page
+
+Introduces the platform, explains the workflow, and highlights key features.
+
+### Dashboard
+
+Displays repository health, workflow statistics, charts, and recent failures.
+
+### Workflow Runs
+
+Lists workflow executions with filtering and navigation.
+
+### Run Details
+
+Shows execution logs, AI-generated insights, timeline, and downloadable reports.
+
+### AI Insights
+
+Dedicated interface for reviewing AI explanations and debugging recommendations.
+
+---
+
+# 📊 Core Components
+
+- Dashboard Sidebar
+- Statistics Cards
+- Failure Charts
+- Recent Failures
+- AI Insight Panel
+- Interactive Timeline
+- Terminal Viewer
+- Report Generator
+
+---
+
+# ⚡ Performance Optimizations
+
+- Component-based architecture
+- Lazy page rendering
+- Optimized chart rendering
+- Efficient API communication using Axios
+- Fast bundling with Vite
+- Responsive layouts for different screen sizes
+
+---
+
+# 🔮 Future Improvements
+
+- GitHub OAuth authentication
+- Multi-repository dashboard
+- Real-time workflow monitoring
+- Live notifications
+- Dark/Light theme switch
+- Team collaboration
+- Historical analytics
+- AI chat assistant for debugging
+- Advanced filtering
+- Repository comparison
+
+---
+
+# 🤝 Contributing
+
+Contributions are welcome.
+
+1. Fork the repository.
+2. Create a feature branch.
+3. Commit your changes.
+4. Push the branch.
+5. Open a Pull Request.
+
+---
+
+# 📜 License
+
+This project is licensed under the **MIT License**.
 
 ---
 
@@ -238,12 +346,10 @@ Example
 
 **Akshat Chitransh**
 
-GitHub:
-https://github.com/akshatchitransh/CI-CD-Automation-Frontend/edit/main/README.md
-
-LinkedIn:
-https://linkedin.com/in/geekyakshat
+- GitHub: https://github.com/akshatchitransh
 
 ---
 
-# ⭐ If you like this project, consider giving it a star!
+## ⭐ Support
+
+If you found this project helpful, consider giving it a **⭐ Star** on GitHub. It helps others discover the project and motivates future development.
